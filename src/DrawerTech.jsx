@@ -8,7 +8,6 @@ import {
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import DashboardIcon from "@material-ui/icons/Dashboard";
-import SettingsIcon from "@material-ui/icons/Settings";
 import { withRouter } from "react-router-dom";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import NotificationsActiveIcon from "@material-ui/icons/NotificationsActive";

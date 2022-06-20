@@ -1,7 +1,6 @@
 import React from "react";
 import Dashbord from "../component/Dashbord";
 import Alert from "../component/Alert";
-import Parametre from "../component/Parametre";
 import { Switch, Route } from "react-router-dom";
 import DrawerTech from "../DrawerTech";
 import { makeStyles } from "@material-ui/core/styles";
