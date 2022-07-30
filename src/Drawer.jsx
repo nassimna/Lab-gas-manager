@@ -37,7 +37,7 @@ const Drawer = (props) => {
       onClick: () => history.push("/Capteure"),
     },
     {
-      text: "Parametre",
+      text: "Configuration",
       icon: <SettingsIcon />,
       onClick: () => history.push("/Parametre"),
     },
@@ -47,7 +47,7 @@ const Drawer = (props) => {
       onClick: () => history.push("/alert"),
     },
     {
-      text: "SingUp",
+      text: "Resgestration",
       icon: <NotificationsActiveIcon />,
       onClick: () => history.push("/SignUp"),
     },

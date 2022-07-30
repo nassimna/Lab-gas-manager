@@ -1,11 +1,12 @@
 import firebase from "firebase";
 const firebaseConfig = {
-  apiKey: "AIzaSyACJCaVASHoJbmhjPPcz1I4XLG29-oCGyc",
-  authDomain: "react-18751.firebaseapp.com",
-  projectId: "react-18751",
-  storageBucket: "react-18751.appspot.com",
-  messagingSenderId: "927365204021",
-  appId: "1:927365204021:web:9261b45eed8b6f3f6cc97c",
+  apiKey: "AIzaSyC825dzC9N5o2VV8WBvJmkkGlhCvHoeZe4",
+  authDomain: "lab-temp-detector.firebaseapp.com",
+  projectId: "lab-temp-detector",
+  storageBucket: "lab-temp-detector.appspot.com",
+  messagingSenderId: "155385457593",
+  appId: "1:155385457593:web:8014c5fb8781a79628e468",
+  measurementId: "G-WHFVPZ95RB",
 };
 const firebaseApp = firebase.initializeApp(firebaseConfig);
 const db = firebaseApp.firestore();
