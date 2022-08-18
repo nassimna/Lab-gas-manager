@@ -1,73 +1,66 @@
-import React from "react";
 import {
-  Drawer as MUIDrawer,
-  ListItem,
-  List,
-  ListItemIcon,
-  ListItemText,
-} from "@material-ui/core";
-import { makeStyles } from "@material-ui/core/styles";
-import DashboardIcon from "@material-ui/icons/Dashboard";
-import AirplayIcon from "@material-ui/icons/Airplay";
-import SettingsIcon from "@material-ui/icons/Settings";
-import { withRouter } from "react-router-dom";
-import ExitToAppIcon from "@material-ui/icons/ExitToApp";
-import NotificationsActiveIcon from "@material-ui/icons/NotificationsActive";
-import { auth } from "./firebase";
+  Drawer as MUIDrawer, List, ListItem, ListItemIcon,
+  ListItemText
+} from '@material-ui/core';
+import { makeStyles } from '@material-ui/core/styles';
+import AirplayIcon from '@material-ui/icons/Airplay';
+import DashboardIcon from '@material-ui/icons/Dashboard';
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+import NotificationsActiveIcon from '@material-ui/icons/NotificationsActive';
+import SettingsIcon from '@material-ui/icons/Settings';
+import React from 'react';
+import { useHistory, withRouter } from 'react-router-dom';
+import { auth } from './firebase';
+
 const useStyles = makeStyles({
   drawer: {
-    display: "flex",
-    width: "190px",
+    display: 'flex',
+    width: '190px',
   },
 });
 
-const Drawer = (props) => {
-  const { history } = props;
+function Drawer() {
+  const history = useHistory();
   const classes = useStyles();
   const itemsList = [
     {
-      text: "Dashhbord",
+      text: 'Dashhbord',
       icon: <DashboardIcon />,
-      onClick: () => history.push("/"),
+      onClick: () => history.push('/'),
     },
 
     {
-      text: "Capteure",
+      text: 'Capteure',
       icon: <AirplayIcon />,
-      onClick: () => history.push("/Capteure"),
+      onClick: () => history.push('/Capteure'),
     },
     {
-      text: "Configuration",
-      icon: <SettingsIcon />,
-      onClick: () => history.push("/Parametre"),
-    },
-    {
-      text: "Alert",
+      text: 'Alert',
       icon: <NotificationsActiveIcon />,
-      onClick: () => history.push("/alert"),
+      onClick: () => history.push('/alert'),
     },
     {
-      text: "Resgestration",
+      text: 'Resgestration',
       icon: <NotificationsActiveIcon />,
-      onClick: () => history.push("/SignUp"),
+      onClick: () => history.push('/SignUp'),
     },
     {
-      text: "Signout",
+      text: 'Signout',
       icon: <ExitToAppIcon />,
       onClick: (e) => {
         e.preventDefault();
         auth
           .signOut()
-          .then((auth) => {
+          .then(() => {
             localStorage.clear();
-            history.push("/SignIn");
+            history.push('/SignIn');
           })
           .catch((error) => {
             // An error happened.
             console.log(error);
           });
       },
-    },
+    }
   ];
   return (
     <MUIDrawer variant="permanent" className={classes.drawer}>
@@ -85,6 +78,6 @@ const Drawer = (props) => {
       </List>
     </MUIDrawer>
   );
-};
+}
 
 export default withRouter(Drawer);

@@ -1,30 +1,31 @@
-import React from "react";
-import Avatar from "@material-ui/core/Avatar";
-import Button from "@material-ui/core/Button";
-import CssBaseline from "@material-ui/core/CssBaseline";
-import TextField from "@material-ui/core/TextField";
-import Grid from "@material-ui/core/Grid";
-import Box from "@material-ui/core/Box";
-import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
-import Typography from "@material-ui/core/Typography";
-import { makeStyles } from "@material-ui/core/styles";
-import Container from "@material-ui/core/Container";
-import { useHistory } from "react-router-dom";
-import { auth, db } from "../firebase";
+import Avatar from '@material-ui/core/Avatar';
+import Box from '@material-ui/core/Box';
+import Button from '@material-ui/core/Button';
+import Container from '@material-ui/core/Container';
+import CssBaseline from '@material-ui/core/CssBaseline';
+import Grid from '@material-ui/core/Grid';
+import { makeStyles } from '@material-ui/core/styles';
+import TextField from '@material-ui/core/TextField';
+import Typography from '@material-ui/core/Typography';
+import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
+import React from 'react';
+import { useHistory } from 'react-router-dom';
+import { auth, db } from '../firebase';
+import './style.css';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
     marginTop: theme.spacing(8),
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
   },
   avatar: {
     margin: theme.spacing(1),
     backgroundColor: theme.palette.secondary.main,
   },
   form: {
-    width: "100%", // Fix IE 11 issue.
+    width: '100%', // Fix IE 11 issue.
     marginTop: theme.spacing(1),
   },
   submit: {
@@ -32,47 +33,47 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const SignIn = (props) => {
+function SignIn() {
   const { useState } = React;
   const classes = useStyles();
   const history = useHistory();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-
-  if (localStorage.getItem("islogin") === "true") {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [message, setMessage] = useState('');
+  if (localStorage.getItem('islogin') === 'true') {
     // not logged in so redirect to login page with the return url
-    history.push("/home");
+    history.push('/home');
   }
   const signin = (e) => {
     e.preventDefault();
     auth
       .signInWithEmailAndPassword(email, password)
-      .then((auth) => {
-        var userId = auth.user.uid;
-        localStorage.setItem("islogin", "true");
+      .then((authObj) => {
+        const userId = authObj.user.uid;
+        localStorage.setItem('islogin', 'true');
 
-        var docRef = db.collection("user").doc(userId);
+        const docRef = db.collection('user').doc(userId);
 
         docRef
           .get()
           .then((doc) => {
             if (doc.exists) {
-              localStorage.setItem("role", doc.data().role);
-              if (localStorage.getItem("role") === "tech") {
-                history.push("/tech");
-              } else if (localStorage.getItem("role") === "eng") {
-                history.push("/");
+              localStorage.setItem('role', doc.data().role);
+              if (localStorage.getItem('role') === 'tech') {
+                history.push('/tech');
+              } else if (localStorage.getItem('role') === 'eng') {
+                history.push('/');
               }
-              console.log("Document data:", doc.data());
+              console.log('Document data:', doc.data());
             } else {
-              console.log("No such document!");
+              setMessage('Incorrect information');
             }
           })
-          .catch((error) => {
-            console.log("Error getting document:", error);
+          .catch(() => {
+            setMessage("Couldn't get user information please try again");
           });
       })
-      .catch((error) => alert(error.message));
+      .catch((error) => setMessage(error.message));
   };
 
   return (
@@ -89,6 +90,9 @@ const SignIn = (props) => {
           Sign in
         </Typography>
         <div className={classes.form} noValidate>
+          <div className={message !== '' ? 'error-div' : ''}>
+            <p>{message}</p>
+          </div>
           <TextField
             variant="outlined"
             margin="normal"
@@ -129,15 +133,15 @@ const SignIn = (props) => {
             <Grid item>
               <p>
                 {
-                  "engineer@demo.com\npassword:engineer\ntechnician@demo.com\npassword:technician"
+                  'engineer@demo.com\npassword:engineer\ntechnician@demo.com\npassword:technician'
                 }
               </p>
             </Grid>
           </Grid>
         </div>
       </div>
-      <Box mt={8}></Box>
+      <Box mt={8} />
     </Container>
   );
-};
+}
 export default SignIn;

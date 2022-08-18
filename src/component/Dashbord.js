@@ -1,93 +1,77 @@
-import MaterialTable from "material-table";
-import React, { useEffect } from "react";
-import { db } from "../firebase";
+import MaterialTable from 'material-table';
+import React, { useEffect, useState } from 'react';
+import { db } from '../firebase';
+import './style.css';
+
 export default function Capteure() {
-  const { useState } = React;
-  const [parametre, setParametre] = useState([]);
-  const [capteur, setCapteur] = useState([]);
   const columns = [
-    { title: "ID", field: "id", hidden: false },
-    { title: "Nom", field: "name" },
+    { title: 'ID', field: 'id', hidden: false },
+    { title: 'Nom', field: 'name' },
     {
-      title: "Type",
-      field: "type",
+      title: 'Type',
+      field: 'type',
     },
     {
-      title: "Date",
-      field: "date",
-      type: "string",
+      title: 'Date',
+      field: 'date',
+      type: 'string',
       initialEditValue: new Date().toISOString(),
     },
-    { title: "Hue", field: "hue", hidden: false },
-    { title: "Temp", field: "temp", hidden: false },
+    { title: 'Hue', field: 'hue', hidden: false },
+    { title: 'Temp', field: 'temp', hidden: false }
   ];
   const [data, setData] = useState([]);
-  const s = useEffect(() => {
-    db.collection("capteur").onSnapshot((querySnapshot) => {
-      let studentlist = [];
-      querySnapshot.forEach((doc) => {
-        studentlist.push({
-          ...doc.data(),
-          id: doc.id,
-        });
-      });
-
-      setData(studentlist);
-    });
-    return () => s;
-  }, []);
-
+  const [message, setMessage] = useState([]);
   function sendAlert(messageBody, capType) {
-    db.collection("alert").doc().set({
+    db.collection('alert').doc().set({
       type: capType,
       message: messageBody,
       date: new Date().toString(),
     });
   }
 
-  const a = useEffect(() => {
-    db.collection("capteur").onSnapshot((querySnapshot) => {
-      var cap = [];
-      querySnapshot.forEach((doc) => {
-        cap.push(doc.data());
-      });
+  const s = useEffect(() => {
+    let messageBody = '';
+    db.collection('capteur').onSnapshot((querySnapshot) => {
+      const capteurs = [];
 
-      setCapteur(cap);
-    });
-    // fetch parametre
-    db.collection("SetParametre").onSnapshot((querySnapshot) => {
-      var par = [];
       querySnapshot.forEach((doc) => {
-        par.push({
-          temp: doc.data().MaxTemp,
-          type: doc.data().type,
-          hue: doc.data().MaxHue,
+        capteurs.push({
+          ...doc.data(),
+          id: doc.id,
         });
+        if (doc.data().hue >= doc.data().maxHue || doc.data().temp >= doc.data().maxTemp) {
+          messageBody = ` Capteur : '${
+            doc.data().name
+          }' de type '${
+            doc.data().type
+          }' overheat \n Humidity = ${
+            doc.data().hue
+          }\n Temiprature = ${
+            doc.data().temp
+          }`;
+          setMessage([...message, messageBody]);
+          sendAlert(messageBody, doc.data().type);
+        }
       });
-
-      setParametre(par);
+      setData(capteurs);
     });
-    return () => a;
+    setInterval(() => {
+      db.collection('capteur').doc('xdnqdevBAZpgM9WGltEH')
+        .update({ temp: Math.floor(Math.random() * 57), hue: Math.floor(Math.random() * 29) });
+    }, 5000);
+    return () => s;
   }, []);
-  parametre.forEach((par) => {
-    capteur.forEach((cap) => {
-      if (
-        par.type === cap.type &&
-        (par.hue <= cap.hue || par.temp <= cap.temp)
-      ) {
-        let messageBody =
-          " Capteur : '" +
-          cap.name +
-          "' de type '" +
-          cap.type +
-          "' overheat \n Humidity =  " +
-          cap.hue +
-          "\n Temiprature = " +
-          cap.temp;
-        alert(messageBody);
-        sendAlert(messageBody, cap.type);
-      }
-    });
-  });
-  return <MaterialTable title="Dashboard" columns={columns} data={data} />;
+
+  return (
+    <div>
+      <MaterialTable title="Dashboard" columns={columns} data={data} />
+      {message.map((element) => (
+        <div className={message !== '' ? 'error-div-dashboard' : ''}>
+          <p>{element}</p>
+        </div>
+      ))}
+
+    </div>
+  );
 }

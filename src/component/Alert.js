@@ -1,32 +1,33 @@
-import MaterialTable from "material-table";
-import React, { useEffect } from "react";
-import { db } from "../firebase";
+import MaterialTable from 'material-table';
+import React, { useEffect } from 'react';
+import { db } from '../firebase';
+
 export default function Alert() {
   const { useState } = React;
 
   const [message, setMessage] = useState([]);
 
-  //const [columns, setColumns] = useState([
+  // const [columns, setColumns] = useState([
   const columns = [
-    { title: "ID", field: "id", hidden: true },
+    { title: 'ID', field: 'id', hidden: true },
 
-    { title: "Type", field: "type" },
+    { title: 'Type', field: 'type' },
     {
-      title: "Message",
-      field: "message",
+      title: 'Message',
+      field: 'message',
     },
 
     {
-      title: "Date",
-      field: "date",
-      type: "string",
+      title: 'Date',
+      field: 'date',
+      type: 'string',
       initialEditValue: new Date().toString(),
-    },
+    }
   ];
 
   const s = useEffect(() => {
-    db.collection("alert").onSnapshot((querySnapshot) => {
-      let messageBody = [];
+    db.collection('alert').onSnapshot((querySnapshot) => {
+      const messageBody = [];
       querySnapshot.forEach((doc) => {
         messageBody.push(doc.data());
       });
@@ -39,7 +40,7 @@ export default function Alert() {
   const deletAll = (e) => {
     e.preventDefault();
 
-    db.collection("alert")
+    db.collection('alert')
       .get()
 
       .then((querySnapshot) => {
@@ -52,7 +53,7 @@ export default function Alert() {
   return (
     <div>
       <MaterialTable title="Alert" columns={columns} data={message} />
-      <button onClick={deletAll}>DELETE ALL</button>
+      <button onClick={deletAll} type="submit">DELETE ALL</button>
     </div>
   );
 }

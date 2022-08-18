@@ -1,29 +1,29 @@
-import React from "react";
-import Avatar from "@material-ui/core/Avatar";
-import Button from "@material-ui/core/Button";
-import CssBaseline from "@material-ui/core/CssBaseline";
-import TextField from "@material-ui/core/TextField";
-import Grid from "@material-ui/core/Grid";
-import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
-import Typography from "@material-ui/core/Typography";
-import { makeStyles } from "@material-ui/core/styles";
-import Container from "@material-ui/core/Container";
-import Select from "@material-ui/core/Select";
-import { auth, db } from "../firebase";
+import Avatar from '@material-ui/core/Avatar';
+import Button from '@material-ui/core/Button';
+import Container from '@material-ui/core/Container';
+import CssBaseline from '@material-ui/core/CssBaseline';
+import Grid from '@material-ui/core/Grid';
+import Select from '@material-ui/core/Select';
+import { makeStyles } from '@material-ui/core/styles';
+import TextField from '@material-ui/core/TextField';
+import Typography from '@material-ui/core/Typography';
+import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
+import React from 'react';
+import { auth, db } from '../firebase';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
     marginTop: theme.spacing(8),
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
   },
   avatar: {
     margin: theme.spacing(1),
     backgroundColor: theme.palette.secondary.main,
   },
   form: {
-    width: "100%", // Fix IE 11 issue.
+    width: '100%', // Fix IE 11 issue.
     marginTop: theme.spacing(3),
   },
   submit: {
@@ -34,25 +34,25 @@ const useStyles = makeStyles((theme) => ({
 export default function SignUp() {
   const classes = useStyles();
   const { useState } = React;
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [firestName, setfirstNAme] = useState("");
-  const [lasName, setlastName] = useState("");
-  const [role, setRole] = useState("eng");
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [firestName, setfirstNAme] = useState('');
+  const [lasName, setlastName] = useState('');
+  const [role, setRole] = useState('eng');
 
   const regestration = (e) => {
     e.preventDefault();
 
     auth
       .createUserWithEmailAndPassword(email, password)
-      .then((auth) => {
-        var userId = auth.user.uid;
-        db.collection("user").doc(userId).set({
+      .then((authObj) => {
+        const userId = authObj.user.uid;
+        db.collection('user').doc(userId).set({
           name: firestName,
           lastName: lasName,
-          role: role,
+          role,
         });
-        alert("YOU SIGNUP ");
+        alert('YOU SIGNUP ');
       })
       .catch((error) => alert(error.message));
   };

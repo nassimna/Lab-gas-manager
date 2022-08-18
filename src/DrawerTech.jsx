@@ -1,57 +1,55 @@
-import React from "react";
 import {
-  Drawer as MUIDrawer,
-  ListItem,
-  List,
-  ListItemIcon,
-  ListItemText,
-} from "@material-ui/core";
-import { makeStyles } from "@material-ui/core/styles";
-import DashboardIcon from "@material-ui/icons/Dashboard";
-import { withRouter } from "react-router-dom";
-import ExitToAppIcon from "@material-ui/icons/ExitToApp";
-import NotificationsActiveIcon from "@material-ui/icons/NotificationsActive";
-import { auth } from "./firebase";
+  Drawer as MUIDrawer, List, ListItem, ListItemIcon,
+  ListItemText
+} from '@material-ui/core';
+import { makeStyles } from '@material-ui/core/styles';
+import DashboardIcon from '@material-ui/icons/Dashboard';
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+import NotificationsActiveIcon from '@material-ui/icons/NotificationsActive';
+import React from 'react';
+import { useHistory, withRouter } from 'react-router-dom';
+import { auth } from './firebase';
+
 const useStyles = makeStyles({
   drawer: {
-    display: "flex",
-    width: "190px",
+    display: 'flex',
+    width: '190px',
   },
 });
 
-const DrawerTech = (props) => {
-  const { history } = props;
+function DrawerTech() {
+  const history = useHistory();
   const classes = useStyles();
 
   const itemsList = [
     {
-      text: "Dashhbord",
+      text: 'Dashhbord',
       icon: <DashboardIcon />,
-      onClick: () => history.push("/tech/dashboard"),
+      onClick: () => history.push('/tech/dashboard'),
     },
 
     {
-      text: "Alert",
+      text: 'Alert',
       icon: <NotificationsActiveIcon />,
-      onClick: () => history.push("/tech/alert"),
+      onClick: () => history.push('/tech/alert'),
     },
     {
-      text: "Signout",
+      text: 'Signout',
       icon: <ExitToAppIcon />,
       onClick: (e) => {
         e.preventDefault();
         auth
           .signOut()
-          .then((auth) => {
+          .then(() => {
             localStorage.clear();
-            history.push("/SignIn");
+            history.push('/SignIn');
           })
           .catch((error) => {
             // An error happened.
             console.log(error);
           });
       },
-    },
+    }
   ];
 
   return (
@@ -70,6 +68,6 @@ const DrawerTech = (props) => {
       </List>
     </MUIDrawer>
   );
-};
+}
 
 export default withRouter(DrawerTech);
