@@ -3,6 +3,13 @@ import React, { useEffect, useState } from 'react';
 import { db } from '../firebase';
 import './style.css';
 
+function sendAlert(messageBody, capType) {
+  db.collection('alert').doc().set({
+    type: capType,
+    message: messageBody,
+    date: new Date().toString(),
+  });
+}
 export default function Capteure() {
   const columns = [
     { title: 'ID', field: 'id', hidden: false },
@@ -21,20 +28,17 @@ export default function Capteure() {
     { title: 'Temp', field: 'temp', hidden: false }
   ];
   const [data, setData] = useState([]);
-  const [message, setMessage] = useState([]);
-  function sendAlert(messageBody, capType) {
-    db.collection('alert').doc().set({
-      type: capType,
-      message: messageBody,
-      date: new Date().toString(),
-    });
-  }
+  const [alertMessage, setAlert] = useState([]);
+  const message = [];
 
+  const clear = (e) => {
+    e.preventDefault();
+    setAlert([]);
+  };
   const s = useEffect(() => {
     let messageBody = '';
     db.collection('capteur').onSnapshot((querySnapshot) => {
       const capteurs = [];
-
       querySnapshot.forEach((doc) => {
         capteurs.push({
           ...doc.data(),
@@ -50,7 +54,9 @@ export default function Capteure() {
           }\n Temiprature = ${
             doc.data().temp
           }`;
-          setMessage([...message, messageBody]);
+
+          message.push(messageBody);
+          setAlert(message);
           sendAlert(messageBody, doc.data().type);
         }
       });
@@ -62,16 +68,15 @@ export default function Capteure() {
     }, 5000);
     return () => s;
   }, []);
-
   return (
     <div>
       <MaterialTable title="Dashboard" columns={columns} data={data} />
-      {message.map((element) => (
-        <div className={message !== '' ? 'error-div-dashboard' : ''}>
+      <button type="submit" onClick={clear}>Clear</button>
+      {alertMessage.map((element) => (
+        <div className="error-div-dashboard">
           <p>{element}</p>
         </div>
       ))}
-
     </div>
   );
 }

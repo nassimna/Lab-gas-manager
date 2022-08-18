@@ -18,6 +18,7 @@ module.exports = {
     'react'
   ],
   rules: {
+    'react/no-array-index-key': 1,
     'no-param-reassign': 1,
     'default-param-last': 0,
     'react/jsx-filename-extension': [1, { extensions: ['.js', '.jsx'] }],
